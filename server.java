@@ -12,12 +12,13 @@ public class server{
             server =new ServerSocket(7777);
             System.out.println("Ready to accept connection!");
             System.out.println(".......");
-            server.accept();
+            socket=server.accept();
             br=new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             pw=new PrintWriter(socket.getOutputStream());
 
             begin_reading();
+            begin_writing();
         }
         catch(Exception e){
             e.printStackTrace();
@@ -42,12 +43,24 @@ public class server{
 
         
         }
-    }
+    };
+    new Thread(r1).start();
 }
     public void begin_writing(){
         Runnable r2=()->{
+            while(true){
+                try{
+                    BufferedReader br1=new BufferedReader(new InputStreamReader(System.in));
+                    String content= br1.readLine();
+                    pw.println(content);
+                    pw.flush();
 
-        }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        new Thread(r2).start();
     }
 
     public static void main(String args[]){
@@ -55,5 +68,6 @@ public class server{
 
         new server();
 
-    }
+    } 
 }
+
